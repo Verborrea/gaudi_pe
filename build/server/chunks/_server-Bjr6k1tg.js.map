@@ -1,0 +1,1 @@
+{"version":3,"file":"_server-Bjr6k1tg.js","sources":["../../../.svelte-kit/adapter-node/entries/endpoints/qr/_server.js"],"sourcesContent":["import { r as redirect } from \"../../../chunks/index.js\";\nfunction GET() {\n  redirect(301, \"/tienda\");\n}\nexport {\n  GET\n};\n"],"names":[],"mappings":";;AACA,SAAS,GAAG,GAAG;AACf,EAAE,QAAQ,CAAC,GAAG,EAAE,SAAS,CAAC,CAAC;AAC3B;;;;"}
