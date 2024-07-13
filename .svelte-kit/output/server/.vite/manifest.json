@@ -48,10 +48,6 @@
       "_ssr.js"
     ]
   },
-  "_productos.js": {
-    "file": "chunks/productos.js",
-    "name": "productos"
-  },
   "_ssr.js": {
     "file": "chunks/ssr.js",
     "name": "ssr"
@@ -119,8 +115,7 @@
     "src": "src/routes/+layout.js",
     "isEntry": true,
     "imports": [
-      "_index.js",
-      "_productos.js"
+      "_index.js"
     ]
   },
   "src/routes/+layout.svelte": {
@@ -251,8 +246,7 @@
     "src": "src/routes/tienda/[id]/+page.js",
     "isEntry": true,
     "imports": [
-      "_index.js",
-      "_productos.js"
+      "_index.js"
     ]
   },
   "src/routes/tienda/[id]/+page.svelte": {

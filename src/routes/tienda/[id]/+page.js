@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
-import { products } from '$lib/productos.js';
+
+export const ssr = false;
 
 function obtenerTresElementosAleatorios(array) {
 	const resultado = new Set();
@@ -18,7 +19,7 @@ export async function load({ fetch, params }) {
 		
 	if (!res.ok) {
 		console.error(res);
-		error(res.status);
+		throw error(res.status);
 	}
 
 	let products = await res.json();
