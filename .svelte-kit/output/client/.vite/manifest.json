@@ -1,6 +1,6 @@
 {
   ".svelte-kit/generated/client-optimized/app.js": {
-    "file": "_app/immutable/entry/app.C6zNGM1p.js",
+    "file": "_app/immutable/entry/app.DJtLBOFM.js",
     "name": "entry/app",
     "src": ".svelte-kit/generated/client-optimized/app.js",
     "isEntry": true,
@@ -21,7 +21,7 @@
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/0.js": {
-    "file": "_app/immutable/nodes/0.DZN9aQPp.js",
+    "file": "_app/immutable/nodes/0.BdceUBKc.js",
     "name": "nodes/0",
     "src": ".svelte-kit/generated/client-optimized/nodes/0.js",
     "isEntry": true,
@@ -30,10 +30,10 @@
       "_index.CzR0xuCU.js",
       "_scheduler.DxlGDd7X.js",
       "_index.BwqU91H_.js",
-      "_stores.DElK5AtC.js",
-      "_stores.Dlay_oK_.js",
+      "_stores.WzsiYnKf.js",
+      "_stores.DviNO9QF.js",
       "_each.BH6mmzmq.js",
-      "_entry.BUw2GM6m.js"
+      "_entry.DGJm_PfT.js"
     ],
     "css": [
       "_app/immutable/assets/0.CL2bCs1v.css"
@@ -43,7 +43,7 @@
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/1.js": {
-    "file": "_app/immutable/nodes/1.UmrN9AEE.js",
+    "file": "_app/immutable/nodes/1.Dg38WqE9.js",
     "name": "nodes/1",
     "src": ".svelte-kit/generated/client-optimized/nodes/1.js",
     "isEntry": true,
@@ -51,7 +51,7 @@
     "imports": [
       "_scheduler.DxlGDd7X.js",
       "_index.BwqU91H_.js",
-      "_stores.DElK5AtC.js"
+      "_stores.WzsiYnKf.js"
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/2.js": {
@@ -74,7 +74,7 @@
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/3.js": {
-    "file": "_app/immutable/nodes/3.CJe-zAJ0.js",
+    "file": "_app/immutable/nodes/3.BcJ4-DgU.js",
     "name": "nodes/3",
     "src": ".svelte-kit/generated/client-optimized/nodes/3.js",
     "isEntry": true,
@@ -83,8 +83,8 @@
       "_scheduler.DxlGDd7X.js",
       "_index.BwqU91H_.js",
       "_each.BH6mmzmq.js",
-      "_entry.BUw2GM6m.js",
-      "_stores.Dlay_oK_.js",
+      "_entry.DGJm_PfT.js",
+      "_stores.DviNO9QF.js",
       "_index.FJJMNGYt.js"
     ],
     "css": [
@@ -92,7 +92,7 @@
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/4.js": {
-    "file": "_app/immutable/nodes/4.BzOpfBzO.js",
+    "file": "_app/immutable/nodes/4.C96q9sk4.js",
     "name": "nodes/4",
     "src": ".svelte-kit/generated/client-optimized/nodes/4.js",
     "isEntry": true,
@@ -101,9 +101,9 @@
       "_scheduler.DxlGDd7X.js",
       "_index.BwqU91H_.js",
       "_each.BH6mmzmq.js",
-      "_stores.Dlay_oK_.js",
+      "_stores.DviNO9QF.js",
       "_index.FJJMNGYt.js",
-      "_entry.BUw2GM6m.js"
+      "_entry.DGJm_PfT.js"
     ],
     "css": [
       "_app/immutable/assets/4.Bh1LWsJc.css"
@@ -127,7 +127,7 @@
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/6.js": {
-    "file": "_app/immutable/nodes/6.DrxY3Ymj.js",
+    "file": "_app/immutable/nodes/6.C-7_oKoC.js",
     "name": "nodes/6",
     "src": ".svelte-kit/generated/client-optimized/nodes/6.js",
     "isEntry": true,
@@ -135,14 +135,14 @@
     "imports": [
       "_scheduler.DxlGDd7X.js",
       "_index.BwqU91H_.js",
-      "_stores.Dlay_oK_.js"
+      "_stores.DviNO9QF.js"
     ],
     "css": [
       "_app/immutable/assets/6.DPHzdFyO.css"
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/7.js": {
-    "file": "_app/immutable/nodes/7.DJIXQsPm.js",
+    "file": "_app/immutable/nodes/7.C2QKzPDo.js",
     "name": "nodes/7",
     "src": ".svelte-kit/generated/client-optimized/nodes/7.js",
     "isEntry": true,
@@ -151,14 +151,14 @@
       "_scheduler.DxlGDd7X.js",
       "_index.BwqU91H_.js",
       "_each.BH6mmzmq.js",
-      "_Product.z5uw8hAw.js"
+      "_Product.8XOE_Nla.js"
     ],
     "css": [
       "_app/immutable/assets/7.kzlCde_f.css"
     ]
   },
   ".svelte-kit/generated/client-optimized/nodes/8.js": {
-    "file": "_app/immutable/nodes/8.BL7C7p8k.js",
+    "file": "_app/immutable/nodes/8.DM-BIyAl.js",
     "name": "nodes/8",
     "src": ".svelte-kit/generated/client-optimized/nodes/8.js",
     "isEntry": true,
@@ -169,8 +169,8 @@
       "_index.BwqU91H_.js",
       "_each.BH6mmzmq.js",
       "_index.FJJMNGYt.js",
-      "_Product.z5uw8hAw.js",
-      "_stores.Dlay_oK_.js"
+      "_Product.8XOE_Nla.js",
+      "_stores.DviNO9QF.js"
     ],
     "css": [
       "_app/immutable/assets/8.aWeLqdCy.css"
@@ -180,14 +180,14 @@
     "file": "_app/immutable/assets/Product.HpvcPrUy.css",
     "src": "_Product.!~{00l}~.js"
   },
-  "_Product.z5uw8hAw.js": {
-    "file": "_app/immutable/chunks/Product.z5uw8hAw.js",
+  "_Product.8XOE_Nla.js": {
+    "file": "_app/immutable/chunks/Product.8XOE_Nla.js",
     "name": "Product",
     "imports": [
       "_scheduler.DxlGDd7X.js",
       "_index.BwqU91H_.js",
       "_index.FJJMNGYt.js",
-      "_stores.Dlay_oK_.js"
+      "_stores.DviNO9QF.js"
     ],
     "css": [
       "_app/immutable/assets/Product.HpvcPrUy.css"
@@ -205,8 +205,8 @@
       "_scheduler.DxlGDd7X.js"
     ]
   },
-  "_entry.BUw2GM6m.js": {
-    "file": "_app/immutable/chunks/entry.BUw2GM6m.js",
+  "_entry.DGJm_PfT.js": {
+    "file": "_app/immutable/chunks/entry.DGJm_PfT.js",
     "name": "entry",
     "imports": [
       "_scheduler.DxlGDd7X.js",
@@ -246,27 +246,27 @@
     "file": "_app/immutable/chunks/scheduler.DxlGDd7X.js",
     "name": "scheduler"
   },
-  "_stores.DElK5AtC.js": {
-    "file": "_app/immutable/chunks/stores.DElK5AtC.js",
-    "name": "stores",
-    "imports": [
-      "_entry.BUw2GM6m.js"
-    ]
-  },
-  "_stores.Dlay_oK_.js": {
-    "file": "_app/immutable/chunks/stores.Dlay_oK_.js",
+  "_stores.DviNO9QF.js": {
+    "file": "_app/immutable/chunks/stores.DviNO9QF.js",
     "name": "stores",
     "imports": [
       "_index.DYpupPmn.js"
     ]
   },
+  "_stores.WzsiYnKf.js": {
+    "file": "_app/immutable/chunks/stores.WzsiYnKf.js",
+    "name": "stores",
+    "imports": [
+      "_entry.DGJm_PfT.js"
+    ]
+  },
   "node_modules/@sveltejs/kit/src/runtime/client/entry.js": {
-    "file": "_app/immutable/entry/start.DyGGZpU2.js",
+    "file": "_app/immutable/entry/start.C_9E6Cvx.js",
     "name": "entry/start",
     "src": "node_modules/@sveltejs/kit/src/runtime/client/entry.js",
     "isEntry": true,
     "imports": [
-      "_entry.BUw2GM6m.js"
+      "_entry.DGJm_PfT.js"
     ]
   },
   "src/lib/assets/codigo.avif": {

@@ -7,20 +7,22 @@ const getInitialState = (key, plantilla) => {
   return plantilla;
 };
 function createCart() {
-  const { subscribe, set, update } = writable(getInitialState("cart-v2", {
+  const { subscribe, set, update } = writable(getInitialState("cart-v3", {
     items: [],
     quantity: 0,
     subtotal: 0,
     nro_latas: 0,
-    showToast: false
+    showToast: false,
+    allowDiscount: false
   }));
   if (typeof localStorage !== "undefined") {
     subscribe((state) => {
-      localStorage.setItem("cart-v2", JSON.stringify(state));
+      localStorage.setItem("cart-v3", JSON.stringify(state));
     });
   }
   return {
     subscribe,
+    set,
     addItem: (productId, price, discount, measure) => update((state) => {
       const total = price * (1 - discount);
       const index = state.items.findIndex(
@@ -42,7 +44,7 @@ function createCart() {
       state.quantity += 1;
       const six = 6;
       const promoDiscount = 0.16;
-      if (measure === "lata") {
+      if (state.allowDiscount && measure === "lata") {
         state.nro_latas += 1;
         if (state.nro_latas < six) {
           return state;
@@ -86,7 +88,7 @@ function createCart() {
       const promoDiscount = 0.16;
       state.quantity -= 1;
       const { id, t, q, m } = state.items[itemIndex];
-      if (m !== "lata") {
+      if (state.allowDiscount === false || m !== "lata") {
         if (q > 1) {
           state.items[itemIndex].q -= 1;
         } else {
@@ -184,12 +186,13 @@ function createCart() {
       state.nro_latas = 5;
       return state;
     }),
-    clear: () => update((state) => {
+    clear: (allowDiscount) => update((state) => {
       state.quantity = 0;
       state.items = [];
       state.nro_latas = 0;
       state.subtotal = 0;
       state.showToast = false;
+      state.allowDiscount = allowDiscount;
       return state;
     }),
     resetToast: () => update((state) => {

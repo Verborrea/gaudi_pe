@@ -7,9 +7,6 @@ async function load({ fetch }) {
     throw error(res.status);
   }
   const products = await res.json();
-  console.log(products.map((p) => {
-    return { ...p, price: p.original };
-  }));
   return {
     products: products.map((p) => {
       return { ...p, price: p.original };

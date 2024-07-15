@@ -13,6 +13,18 @@
 		goto("/checkout")
 		form.submit()
 	}
+
+	async function clearCart() {
+		const res_dis = await fetch('https://api.gaudi.pe/discount')
+		
+		if (!res_dis.ok) {
+			console.error(res_dis)
+			throw error(res_dis.status)
+		}
+
+		const allowDiscount = await res_dis.json()
+		cart.clear(allowDiscount.status)
+	}
 </script>
 
 <header class="fc">
@@ -37,7 +49,7 @@
 	<div class="subtotal">
 		Subtotal: <strong>S/&nbsp;{$cart.subtotal.toFixed(2)}</strong>
 	</div>
-	<button type="button" class="btn btn-outlined" on:click={cart.clear}>
+	<button type="button" class="btn btn-outlined" on:click={clearCart}>
 		Limpiar Carrito
 	</button>
 	<a href="/carrito" class="btn btn-main" on:click={form.submit()}>Ver Carrito</a>

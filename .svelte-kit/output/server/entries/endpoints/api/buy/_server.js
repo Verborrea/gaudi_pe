@@ -117,7 +117,6 @@ const template = `<!DOCTYPE html>
 function replaceTemplate(template2, data) {
   return template2.replace(/{{(.*?)}}/g, (_, key) => {
     const value = data[key.trim()];
-    console.log(value);
     if (key.trim() === "lng" || key.trim() === "lat") {
       return value || "";
     }

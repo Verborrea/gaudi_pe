@@ -54,7 +54,6 @@
 				imageUrl = canvas.toDataURL('image/webp', 0.75);
 				canvas.toBlob((blob) => {
 					yape = new File([blob], 'image.webp', { type: 'image/webp' });
-					console.log('File creado:', yape);
 				}, 'image/webp', 0.75);
 
 				ready = true;

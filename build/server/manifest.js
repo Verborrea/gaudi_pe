@@ -10,17 +10,17 @@ return {
 	assets: new Set([".DS_Store","android-chrome-192x192.png","android-chrome-512x512.png","apple-touch-icon.png","browserconfig.xml","favicon-16x16.png","favicon-32x32.png","favicon.ico","mstile-144x144.png","mstile-150x150.png","mstile-310x150.png","mstile-310x310.png","mstile-70x70.png","og_image.jpeg","products/fb-b.avif","products/fb-lata.avif","products/fb-latas.avif","products/limon-b.avif","products/limon-lata.avif","products/limon-latas.avif","products/manzana-lata.avif","products/manzana-latas.avif","safari-pinned-tab.svg","site.webmanifest"]),
 	mimeTypes: {".png":"image/png",".xml":"text/xml",".jpeg":"image/jpeg",".avif":"image/avif",".svg":"image/svg+xml",".webmanifest":"application/manifest+json"},
 	_: {
-		client: {"start":"_app/immutable/entry/start.DyGGZpU2.js","app":"_app/immutable/entry/app.C6zNGM1p.js","imports":["_app/immutable/entry/start.DyGGZpU2.js","_app/immutable/chunks/entry.BUw2GM6m.js","_app/immutable/chunks/scheduler.DxlGDd7X.js","_app/immutable/chunks/index.DYpupPmn.js","_app/immutable/chunks/control.CYgJF_JY.js","_app/immutable/entry/app.C6zNGM1p.js","_app/immutable/chunks/scheduler.DxlGDd7X.js","_app/immutable/chunks/index.BwqU91H_.js"],"stylesheets":[],"fonts":[],"uses_env_dynamic_public":false},
+		client: {"start":"_app/immutable/entry/start.C_9E6Cvx.js","app":"_app/immutable/entry/app.DJtLBOFM.js","imports":["_app/immutable/entry/start.C_9E6Cvx.js","_app/immutable/chunks/entry.DGJm_PfT.js","_app/immutable/chunks/scheduler.DxlGDd7X.js","_app/immutable/chunks/index.DYpupPmn.js","_app/immutable/chunks/control.CYgJF_JY.js","_app/immutable/entry/app.DJtLBOFM.js","_app/immutable/chunks/scheduler.DxlGDd7X.js","_app/immutable/chunks/index.BwqU91H_.js"],"stylesheets":[],"fonts":[],"uses_env_dynamic_public":false},
 		nodes: [
-			__memo(() => import('./chunks/0-BqLGlVP7.js')),
-			__memo(() => import('./chunks/1-HKuwEzRk.js')),
+			__memo(() => import('./chunks/0-C9WNSS6y.js')),
+			__memo(() => import('./chunks/1-BJEHOsSr.js')),
 			__memo(() => import('./chunks/2-CEH5Fi62.js')),
-			__memo(() => import('./chunks/3-BY3uXZeG.js')),
-			__memo(() => import('./chunks/4-3pH_7CIw.js')),
+			__memo(() => import('./chunks/3-D62lmxax.js')),
+			__memo(() => import('./chunks/4-0r7E54Sd.js')),
 			__memo(() => import('./chunks/5-Db4gyV-A.js')),
-			__memo(() => import('./chunks/6-C2axdlPt.js')),
-			__memo(() => import('./chunks/7-DfzL-0hq.js')),
-			__memo(() => import('./chunks/8-DNbXCmmA.js'))
+			__memo(() => import('./chunks/6-DKFZoTkC.js')),
+			__memo(() => import('./chunks/7-D3CbokbJ.js')),
+			__memo(() => import('./chunks/8-DI30tyr2.js'))
 		],
 		routes: [
 			{
@@ -35,7 +35,7 @@ return {
 				pattern: /^\/api\/buy\/?$/,
 				params: [],
 				page: null,
-				endpoint: __memo(() => import('./chunks/_server-Cx725Hw8.js'))
+				endpoint: __memo(() => import('./chunks/_server-BnMjJMg_.js'))
 			},
 			{
 				id: "/carrito",
