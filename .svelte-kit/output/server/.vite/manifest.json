@@ -205,6 +205,15 @@
       "_app/immutable/assets/_page.CDX1tqOz.css"
     ]
   },
+  "src/routes/mapa/+page.js": {
+    "file": "entries/pages/mapa/_page.js",
+    "name": "entries/pages/mapa/_page",
+    "src": "src/routes/mapa/+page.js",
+    "isEntry": true,
+    "imports": [
+      "_index.js"
+    ]
+  },
   "src/routes/mapa/+page.svelte": {
     "file": "entries/pages/mapa/_page.svelte.js",
     "name": "entries/pages/mapa/_page.svelte",

@@ -4,10 +4,11 @@
 	import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon"
 	import { onMount } from "svelte"
 	import { envio } from "$lib/stores.js"
-	import zonas from "./zonas.json"
+
+	export let data
 
 	function obtenerPropiedadDeZona(punto) {
-		for (const zona of zonas.features) {
+		for (const zona of data.zonas.features) {
 			const turfPoly = polygon(zona.geometry.coordinates)
 			if (booleanPointInPolygon(punto, turfPoly)) {
 				return zona.properties;
@@ -44,7 +45,7 @@
 		map.on('load', () => {
 			map.addSource('zones', {
 				type: 'geojson',
-				data: zonas
+				data: data.zonas
 			});
 
 			const matchFillExpression = ['match', ['get', 'dias']];
