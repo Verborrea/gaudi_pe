@@ -98,7 +98,7 @@
 						Ubicación GPS
 						{#if $envio.isSet === false}
 						<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#737373"><path d="m429-316 260-259-69-69-191 190-87-86-69 69 156 155Zm51 252q-85.64 0-161.48-32.52-75.84-32.52-132.66-89.34-56.82-56.82-89.34-132.66T64-480q0-86.9 32.58-162.46 32.58-75.57 89.5-132.55Q243-832 318.74-864q75.74-32 161.26-32 86.89 0 162.44 32Q718-832 775-775t89 132.58q32 75.59 32 162.5 0 85.92-32 161.42-32 75.5-88.99 132.42-56.98 56.92-132.55 89.5Q566.9-64 480-64Zm0-98q132.51 0 225.26-92.74Q798-347.49 798-480t-92.74-225.26Q612.51-798 480-798t-225.26 92.74Q162-612.51 162-480t92.74 225.26Q347.49-162 480-162Zm0-318Z"/></svg>
-						{:else if $envio.price === undefined}
+						{:else if $envio.dia.length === 0}
 						<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#E72832"><path d="m339-288 141-141 141 141 51-51-141-141 141-141-51-51-141 141-141-141-51 51 141 141-141 141 51 51ZM480-96q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Z"/></svg>
 						{:else}
 						<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#2bc54a"><path d="m429-316 260-259-69-69-191 190-87-86-69 69 156 155Zm51 252q-85.64 0-161.48-32.52-75.84-32.52-132.66-89.34-56.82-56.82-89.34-132.66T64-480q0-86.9 32.58-162.46 32.58-75.57 89.5-132.55Q243-832 318.74-864q75.74-32 161.26-32 86.89 0 162.44 32Q718-832 775-775t89 132.58q32 75.59 32 162.5 0 85.92-32 161.42-32 75.5-88.99 132.42-56.98 56.92-132.55 89.5Q566.9-64 480-64Z"/></svg>
@@ -106,12 +106,12 @@
 					</h4>
 					<p><a href="/mapa">{ $envio.isSet ? "Cambiar ubicación" : "Seleccione su ubicación" }</a></p>
 				</div>
-				{#if ($envio.price === undefined)}
+				{#if ($envio.dia.length === 0)}
 				<p>Si su zona de envío no está en el mapa o tiene alguna otra pregunta no dude en <a href="https://wa.me/51978685152" target="_blank">contactarnos mediante WhatsApp 📞</a></p>
 				{/if}
 				<div class="fc">
 					<h4>Envío</h4>
-					{#if ($envio.price !== undefined)}
+					{#if ($envio.dia.length > 0)}
 						<p>S/&nbsp;{$envio.price.toFixed(2)}</p>
 					{:else}
 						<p>Zona no disponible 🙁</p>

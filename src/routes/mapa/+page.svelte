@@ -2,13 +2,16 @@
 	import mapboxgl from "mapbox-gl"
 	import { polygon } from "@turf/helpers"
 	import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon"
-	import { onMount } from "svelte"
+	import { onMount, tick } from "svelte"
 	import { envio } from "$lib/stores.js"
 
 	export let data
 
+	const zones = JSON.parse(data.zonas)
+	const formatter = new Intl.ListFormat('es', { style: 'long', type: 'conjunction' });
+
 	function obtenerPropiedadDeZona(punto) {
-		for (const zona of data.zonas.features) {
+		for (const zona of zones.features) {
 			const turfPoly = polygon(zona.geometry.coordinates)
 			if (booleanPointInPolygon(punto, turfPoly)) {
 				return zona.properties;
@@ -20,14 +23,14 @@
 	onMount(() => {
 		let map = new mapboxgl.Map({
 			container: 'map',
-			center: [-71.536973, -16.398822],
+			center: $envio.coords,
 			zoom: 12,
 			style: 'mapbox://styles/mapbox/light-v11',
 			accessToken: 'pk.eyJ1IjoiYWxhbi0yNSIsImEiOiJjbGViaGI4aDkwcHpxM25udTAwaWcyczFrIn0.MZhpce5K1n4Gi7xBVGFj6Q'
 		})
 
 		let marker = new mapboxgl.Marker()
-			.setLngLat([-71.536973, -16.398822])
+			.setLngLat($envio.coords)
 			.addTo(map)
 
 		map.addControl(
@@ -45,29 +48,8 @@
 		map.on('load', () => {
 			map.addSource('zones', {
 				type: 'geojson',
-				data: data.zonas
+				data: zones
 			});
-
-			const matchFillExpression = ['match', ['get', 'dias']];
-			const matchLineExpression = ['match', ['get', 'dias']];
-
-			// Colores transparentes para los rellenos
-			matchFillExpression.push('lunes', 'rgba(222,50,76,0.3)');
-			matchFillExpression.push('martes', 'rgba(244,137,95, 0.3)');
-			matchFillExpression.push('miercoles', 'rgba(248,225,111, 0.3)');
-			matchFillExpression.push('jueves', 'rgba(149,207,146, 0.3)');
-			matchFillExpression.push('viernes', 'rgba(54,154,204, 0.3)');
-			matchFillExpression.push('sabado', 'rgba(150,86,162, 0.3)');
-			matchFillExpression.push('rgba(0, 0, 0, 0)');
-
-			// Colores opacos para las líneas
-			matchLineExpression.push('lunes', '#de324c');
-			matchLineExpression.push('martes', '#f4895f');
-			matchLineExpression.push('miercoles', '#f8e16f');
-			matchLineExpression.push('jueves', '#95cf92');
-			matchLineExpression.push('viernes', '#369acc');
-			matchLineExpression.push('sabado', '#9656a2');
-			matchLineExpression.push('rgb(0, 0, 0)');
 
 			// Capa de relleno con transparencia
 			map.addLayer({
@@ -75,7 +57,7 @@
 				'type': 'fill',
 				'source': 'zones',
 				'paint': {
-					'fill-color': matchFillExpression
+					'fill-color': 'rgba(0,0,0,0.25)'
 				}
 			});
 
@@ -85,8 +67,8 @@
 				'type': 'line',
 				'source': 'zones',
 				'paint': {
-					'line-color': matchLineExpression,
-					'line-width': 1
+					'line-color': 'black',
+					'line-width': 2
 				}
 			});
 		});
@@ -95,44 +77,24 @@
 			marker.setLngLat(map.getCenter())
 		});
 
-		$envio.isSet = true
-		$envio.price = 3
-		$envio.dia = "Lunes y Sábado"
-		$envio.coords = map.getCenter().toArray()
-
-		const preciosDict = {
-			lunes: 5,
-			martes: 5,
-			miercoles: 5,
-			jueves: 5,
-			viernes: 5,
-			sabado: 5
-		}
-			
-		const diasDict = {
-			lunes: "Lunes",
-			martes: "Martes",
-			miercoles: "Miércoles",
-			jueves: "Jueves",
-			viernes: "Viernes",
-			sabado: "Sábado"
-		}
-
 		map.on('moveend', (e) => {
 			let zone = obtenerPropiedadDeZona(map.getCenter().toArray())
 			$envio.isSet = true
-			$envio.price = preciosDict[zone?.dias]
-			$envio.dia = diasDict[zone?.dias]
-			if (zone.nombre == 'centro arriba' || zone.nombre == 'centro abajo') {
-				$envio.price = 3
-				$envio.dia = 'Lunes y Sábado'
-			}
+			$envio.price = zone?.precio || 0
+			$envio.dia = zone?.dias || []
 			$envio.coords = map.getCenter().toArray()
 		})
+
+		const initial_zone = obtenerPropiedadDeZona(map.getCenter().toArray())
+		$envio.isSet = true
+		$envio.price = initial_zone?.precio || 0
+		$envio.dia = initial_zone?.dias || []
+		$envio.coords = map.getCenter().toArray()
 	})
 </script>
 
 <svelte:head>
+	<title>Gaudí | Zona de envío</title>
 	<link href='https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css' rel='stylesheet' />
 </svelte:head>
 
@@ -143,17 +105,28 @@
 			<div id="map"></div>
 			<div class="info">
 				<p class="nm">Por favor seleccione la dirección de envío en el mapa</p>
-				{#if ($envio.price !== undefined)}
+				{#if ($envio.dia.length > 0)}
 					<div class="fc">
 						<p>Costo de envío:</p>
 						<p>S/&nbsp;{$envio.price.toFixed(2)}</p>
 					</div>
 					<div class="fc">
-						<p>Día de envío:</p>
-						<p>{$envio.dia}</p>
+						<p>Día(s) de envío:</p>
+						<p>{formatter.format($envio.dia)}</p>
 					</div>
 				{:else}
-					<p>Pongase en contacto con nosotros para el precio del envío.</p>
+					<p>
+						Pongase en contacto con nosotros para el precio del envío. Puede escribirnos
+						a cualquiera de los siguientes números:
+					</p>
+					<ul>
+						<li>
+							<a href="https://wa.me/51978685152" target="_blank">+51 978 685 152</a>
+						</li>
+						<li>
+							<a href="https://wa.me/51910880595" target="_blank">+51 910 880 595</a>
+						</li>
+					</ul>
 				{/if}
 				<a href="/carrito" class="btn btn-main">Continuar</a>
 			</div>
@@ -180,12 +153,15 @@
 		border: 2px solid var(--background);
 		padding: 32px;
 	}
-	p {
+	p, ul {
 		font-size: 16px;
     	color: var(--disabled);
 	}
 	.nm {
 		margin: 0;
+	}
+	li>a {
+		color: var(--accent);
 	}
 	.fc {
 		justify-content: space-between;

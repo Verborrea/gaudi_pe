@@ -23,11 +23,6 @@ export async function load({ fetch, params }) {
 	}
 
 	let products = await res.json();
-	products = products.map(p => {return {...p,
-		price: p.original, 
-		special_discount: 0.5,
-		special_discount_quantity: 4
-	}})
 
 	const product = products.find((p) => p.id == params.id);
 

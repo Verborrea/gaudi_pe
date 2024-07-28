@@ -8,6 +8,8 @@
 
 	let dialog, showToast, error_message
 
+	const formatter = new Intl.ListFormat('es', { style: 'long', type: 'conjunction' });
+
 	function isValidEmail(email) {
 		const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		return re.test(email);
@@ -64,7 +66,7 @@
 					<input id="name" name="name" type="name" required bind:value={$info.name}>
 				</label>
 				<label for="phone">
-					<div>Teléfono<span>*</span></div>
+					<div>Teléfono Celular<span>*</span></div>
 					<input id="phone" name="phone" type="tel" required bind:value={$info.phone} on:input={handleInput}>
 				</label>
 				<label for="email">
@@ -106,19 +108,19 @@
 			<hr>
 			<div class="fc">
 				<p>Costo de Envío</p>
-				{#if ($envio.price !== undefined)}
+				{#if ($envio.dia.length > 0)}
 					<p>S/&nbsp;{$envio.price.toFixed(2)}</p>
 				{:else}
-					<p>Zona no disponible 🙁</p>
+					<a href="/mapa" class="red">Zona no disponible 🙁</a>
 				{/if}
 			</div>
 			<hr>
 			<div class="fc">
 				<p>Fecha de Envío</p>
-				{#if ($envio.dia !== undefined)}
-					<p>{$envio.dia}</p>
+				{#if ($envio.dia.length > 0)}
+					<p>{formatter.format($envio.dia)}</p>
 				{:else}
-					<p>Zona no disponible 🙁</p>
+					<p class="red">Zona no disponible 🙁</p>
 				{/if}
 			</div>
 			<hr>
@@ -130,7 +132,7 @@
 			<p>Método de pago vía QR, al realizar el pago se deberá adjuntar comprobante con el pedido del pedido.</p>
 			<img {src} height="60" alt="Yape">
 			<p>Tus datos personales se utilizarán para procesar tu pedido, mejorar tu experiencia en esta web </p>
-			<button type="button" class="btn btn-main" on:click={process}>
+			<button type="button" class="btn btn-main" on:click={process} disabled={$envio.dia.length === 0}>
 				Proceder al Pago
 			</button>
 			<dialog bind:this={dialog}>
@@ -148,6 +150,9 @@
 </div>
 
 <style>
+	.red {
+		color: var(--accent) !important;
+	}
 	dialog {
 		border: none;
     	box-shadow: 0 0 20px 0px #00000096;
@@ -167,7 +172,7 @@
 		padding: 32px;
 		max-width: 420px;
 	}
-	.pedido p {
+	.pedido p, .pedido a {
 		font-size: 14px;
 		color: var(--disabled);
 	}

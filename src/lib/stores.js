@@ -268,8 +268,8 @@ function createEnvio() {
 	const { subscribe, set, update } = writable(getInitialState('envio', {
 		isSet: false,
 		price: 0,
-		coords: null,
-		dia: "Miércoles"
+		coords: [-71.536973, -16.398822],
+		dia: []
 	}));
 
 	if (typeof localStorage !== 'undefined') {
