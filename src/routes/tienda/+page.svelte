@@ -32,6 +32,8 @@
 					price={product.price}
 					discount={product.discount}
 					measure={product.measure}
+					special_discount={product.special_discount}
+					special_discount_quantity={product.special_discount_quantity}
 				/>
 			{/each}
 		</div>

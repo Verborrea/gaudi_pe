@@ -8,7 +8,7 @@
 	let showToast
 
 	function addProduct() {
-		cart.addItem(data.product.id, data.product.price, data.product.discount, data.product.measure)
+		cart.addItem(data.product)
 		if ($cart.showToast === true) {
 			cart.resetToast()
 			showToast = true;
@@ -19,7 +19,7 @@
 	}
 
 	function removeProduct() {
-		cart.removeItem(data.product.id, data.product.discount)
+		cart.removeItem(data.product)
 	}
 
 	$: cantidad = $cart.items.filter(item => item.id === data.product.id).reduce(

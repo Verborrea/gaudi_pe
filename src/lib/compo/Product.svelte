@@ -2,12 +2,19 @@
 	import { fade, fly } from "svelte/transition"
 	import { cart } from "$lib/stores.js"
 
-	export let id, src, name, price, discount, measure
+	export let id
+	export let src
+	export let name
+	export let price
+	export let discount
+	export let measure
+	export let special_discount
+	export let special_discount_quantity
 
 	let showToast
 
 	function addProduct() {
-		cart.addItem(id, price, discount, measure)
+		cart.addItem({id, price, discount, measure, special_discount, special_discount_quantity})
 		if ($cart.showToast === true) {
 			cart.resetToast()
 			showToast = true;
@@ -18,7 +25,7 @@
 	}
 
 	function removeProduct() {
-		cart.removeItem(id, discount)
+		cart.removeItem({id, price, discount, measure, special_discount, special_discount_quantity})
 	}
 
 </script>

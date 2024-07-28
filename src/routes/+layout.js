@@ -13,6 +13,10 @@ export async function load({ fetch }) {
 	const products = await res.json();
 	
 	return {
-		products: products.map(p => {return {...p, price: p.original}})
+		products: products.map(p => {return {...p,
+			price: p.original, 
+			special_discount: 0.5,
+			special_discount_quantity: 4
+		}})
 	}
 }

@@ -9,40 +9,39 @@ const getInitialState = (key, plantilla) => {
 };
 
 function createCart() {
-	const { subscribe, set, update } = writable(getInitialState('cart-v3', {
+	const { subscribe, set, update } = writable(getInitialState('cart-v4', {
 		items: [],
 		quantity: 0,
 		subtotal: 0,
-		nro_latas: 0,
+		special: {},
 		showToast: false,
-		allowDiscount: false
 	}));
 
 	if (typeof localStorage !== 'undefined') {
 		subscribe((state) => {
-			localStorage.setItem('cart-v3', JSON.stringify(state));
+			localStorage.setItem('cart-v4', JSON.stringify(state));
 		});
 	}
 
 	return {
 		subscribe,
 		set,
-		addItem: (productId, price, discount, measure) =>
+		addItem: (product) =>
 			update((state) => {
 				// Añadir producto a la lista
-				const total = price * (1 - discount)
+				const total = product.price * (1 - product.discount)
 				const index = state.items.findIndex((item) =>
-					(item.id === productId && item.t === total)
+					(item.id === product.id && item.t === total)
 				);
 
 				if (index !== -1) {
 					state.items[index].q += 1;
 				} else {
 					state.items.push({
-						id: productId,
+						id: product.id,
 						t: total,
 						q: 1,
-						m: measure,
+						m: product.measure,
 						d: false // es un elemento con descuento por 6pack?
 					});
 				}
@@ -51,21 +50,26 @@ function createCart() {
 				state.subtotal += total;
 				state.quantity += 1;
 				
-				// Lógica de promo x six-pack
-				const six = 6;
-				const promoDiscount = 0.16;
+				// Lógica de promo especial x cantidad
+				const promoDiscountQuantity = product.special_discount_quantity;
+				const promoDiscount = product.special_discount;
 			
-				if (state.allowDiscount && measure === 'lata') {
-					state.nro_latas += 1;
-					if (state.nro_latas < six) {
+				if (product.special_discount > 0) {
+					if (product.measure in state.special ) {
+						state.special[product.measure] += 1;
+					} else {
+						state.special[product.measure] = 1;
+					}
+					
+					if (state.special[product.measure] < promoDiscountQuantity) {
 						return state;
 					}
-					state.nro_latas = 0;
+					state.special[product.measure] = 0;
 			
-					// Actualizar total de las últimas 6 latas
-					let latas = state.items.filter(item => item.m === 'lata');
+					// Actualizar total de los últimas 6 prods
+					let latas = state.items.filter(item => item.m === product.measure);
 					let [sinPromo, conPromo] = latas.reduce((acc, item) => {
-						if (item.t === price * (1 - discount)) {
+						if (item.t === product.price * (1 - product.discount)) {
 							acc[0].push(item);
 						} else {
 							acc[1].push(item);
@@ -73,7 +77,7 @@ function createCart() {
 						return acc;
 					}, [[], []]);
 			
-					// Aplicar el descuento a las latas sin promo
+					// Aplicar el descuento a los prods sin promo
 					for (let lata of sinPromo) {
 						const promoIndex = conPromo.findIndex(item => item.id === lata.id);
 						if (promoIndex !== -1) {
@@ -83,22 +87,22 @@ function createCart() {
 							const pos = state.items.findIndex(i => i.id === lata.id && i.t === lata.t);
 							state.items.splice(pos, 1, {
 								id: lata.id,
-								t: price * (1 - promoDiscount),
+								t: product.price * (1 - promoDiscount),
 								q: lata.q,
 								m: 'lata',
 								d: true
 							});
 						}
 					}
-					state.subtotal -= six * price * (promoDiscount - discount);
+					state.subtotal -= promoDiscountQuantity * product.price * (promoDiscount - product.discount);
 					state.showToast = true;
 				}
 
 				return state;
 			}),
-		removeItem: (productId, discount) =>
+		removeItem: (product) =>
 			update((state) => {
-				const itemIndex = state.items.findIndex(item => item.id === productId);
+				const itemIndex = state.items.findIndex(item => item.id === product.id);
 
 				// Si el producto no existe, no hacer nada
 				if (itemIndex === -1) {
@@ -106,16 +110,16 @@ function createCart() {
 				}
 
 				// Lógica de promo x six-pack
-				const six = 6;
-				const promoDiscount = 0.16;
+				const promoDiscountQuantity = product.special_discount_quantity;
+				const promoDiscount = product.special_discount;
 
 				state.quantity -= 1;
 
 				// obtener datos del elemento?
 				const { id, t, q, m } = state.items[itemIndex];
 
-				// si no es una lata
-				if (state.allowDiscount === false || m !== 'lata') {
+				// si no tiene descuento especial
+				if (product.special_discount === 0) {
 					if (q > 1) {
 						state.items[itemIndex].q -= 1;
 					} else {
@@ -127,9 +131,9 @@ function createCart() {
 
 				// si es una lata:
 
-				// 1. existe alguna lata libre del mismo sabor?
+				// 1. existe algun producto igual desagrupado?
 				const freeSameIdIndex = state.items.findIndex(item =>
-					(item.id === productId && item.d === false)
+					(item.id === product.id && item.d === false)
 				);
 				if (freeSameIdIndex !== -1) {		
 					const lata = state.items[freeSameIdIndex];
@@ -138,17 +142,17 @@ function createCart() {
 					} else {
 						state.items.splice(freeSameIdIndex, 1);
 					}
-					state.nro_latas -= 1;
+					state.special[product.measure] -= 1;
 					state.subtotal -= lata.t;
 					return state;
 				}
 
-				// 2. existe cualquier otra lata libre?
-				if (state.nro_latas > 0) {
+				// 2. existe cualquier otro prod libre?
+				if (state.special[product.measure] > 0) {
 
 					// quitar toRemove
 					const toRemoveIndex = state.items.findIndex(item =>
-						(item.id === productId && item.d === true)
+						(item.id === product.id && item.d === true)
 					);
 					const toRemovePrice = state.items[toRemoveIndex].t
 					if (state.items[toRemoveIndex].q > 1) {
@@ -159,7 +163,7 @@ function createCart() {
 
 					// quitar free
 					const freeIndex = state.items.findIndex(item =>
-						(item.d === false && item.m === 'lata')
+						(item.d === false && item.m === product.measure)
 					);
 					const free = state.items[freeIndex]
 					if (state.items[freeIndex].q > 1) {
@@ -180,13 +184,13 @@ function createCart() {
 							id: free.id,
 							t: toRemovePrice,
 							q: 1,
-							m: 'lata',
+							m: product.measure,
 							d: true // esta sí tiene descuento
 						});
 					}
 
 					// Actualizar variables
-					state.nro_latas -= 1
+					state.special[product.measure] -= 1
 					state.subtotal -= free.t
 					return state
 				}
@@ -201,13 +205,13 @@ function createCart() {
 				}
 
 				// Inicializar contadores para las latas procesadas
-				let remainingQty = 5;
-				const priceWithoutDiscount = t / (1 - promoDiscount) * (1 - discount);
+				let remainingQty = promoDiscountQuantity - 1;
+				const priceWithoutDiscount = t / (1 - promoDiscount) * (1 - product.discount);
 
 				// Quitar el descuento de las primeras 5 latas que encuentres
 				for (let i = 0; i < state.items.length && remainingQty > 0; i++) {
 					const item = state.items[i];
-					if (item.m === 'lata' && item.d === true) {
+					if (item.m === product.measure && item.d === true) {
 						const qtyToConvert = Math.min(remainingQty, item.q);
 
 						if (item.q === qtyToConvert) {
@@ -216,7 +220,7 @@ function createCart() {
 								id: item.id,
 								t: priceWithoutDiscount,
 								q: item.q,
-								m: 'lata',
+								m: product.measure,
 								d: false,
 							});
 						} else {
@@ -226,7 +230,7 @@ function createCart() {
 								id: item.id,
 								t: priceWithoutDiscount,
 								q: qtyToConvert,
-								m: 'lata',
+								m: product.measure,
 								d: false,
 							});
 						}
@@ -235,20 +239,19 @@ function createCart() {
 				}
 
 				// Actualizar subtotal y número de latas libres
-				state.subtotal -= 6 * t;
-				state.subtotal += 5 * priceWithoutDiscount;
-				state.nro_latas = 5;
+				state.subtotal -= promoDiscountQuantity * t;
+				state.subtotal += (promoDiscountQuantity - 1) * priceWithoutDiscount;
+				state.special[product.measure] = promoDiscountQuantity - 1;
 
 				return state;
 			}),
-		clear: (allowDiscount) =>
+		clear: () =>
 			update((state) => {
-				state.quantity = 0;
 				state.items = [];
-				state.nro_latas = 0;
+				state.quantity = 0;
 				state.subtotal = 0;
+				state.special = {};
 				state.showToast = false;
-				state.allowDiscount = allowDiscount;
 
 				return state;
 			}),

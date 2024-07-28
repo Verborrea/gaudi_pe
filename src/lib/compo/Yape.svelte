@@ -107,15 +107,7 @@
 
 			let res = await response.json()
 			if (res.status === 'success') {
-				const res_dis = await fetch('https://api.gaudi.pe/discount')
-		
-				if (!res_dis.ok) {
-					console.error(res_dis)
-					throw error(res_dis.status)
-				}
-
-				const allowDiscount = await res_dis.json()
-				cart.clear(allowDiscount.status)
+				cart.clear()
 				goto("/gracias")
 			} else {
 				alert(res.error.message)
