@@ -6,8 +6,7 @@
 	import { envio } from "$lib/stores.js"
 
 	export let data
-
-	const zones = JSON.parse(data.zonas)
+	
 	const formatter = new Intl.ListFormat('es', { style: 'long', type: 'conjunction' });
 
 	const days = {
@@ -21,7 +20,7 @@
 	}
 			
 	function obtenerPropiedadDeZona(punto) {
-		for (const zona of zones.features) {
+		for (const zona of data.zonas.features) {
 			const turfPoly = polygon(zona.geometry.coordinates)
 			if (booleanPointInPolygon(punto, turfPoly)) {
 				return zona.properties;
@@ -58,7 +57,7 @@
 		map.on('load', () => {
 			map.addSource('zones', {
 				type: 'geojson',
-				data: zones
+				data: data.zonas
 			});
 
 			// Capa de relleno con transparencia
@@ -91,7 +90,6 @@
 			let zone = obtenerPropiedadDeZona(map.getCenter().toArray())
 			$envio.isSet = true
 			$envio.price = zone?.precio || 0
-d
 			$envio.dia = zone?.dias?.map(d => days[d]) || []
 			$envio.coords = map.getCenter().toArray()
 		})
