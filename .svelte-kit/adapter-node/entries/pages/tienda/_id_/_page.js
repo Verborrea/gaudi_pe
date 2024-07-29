@@ -15,9 +15,6 @@ async function load({ fetch, params }) {
     throw error(res.status);
   }
   let products = await res.json();
-  products = products.map((p) => {
-    return { ...p, price: p.original };
-  });
   const product = products.find((p) => p.id == params.id);
   if (!product) throw error(404);
   return {

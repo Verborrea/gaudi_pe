@@ -7,11 +7,7 @@ async function load({ fetch }) {
     throw error(res.status);
   }
   const products = await res.json();
-  return {
-    products: products.map((p) => {
-      return { ...p, price: p.original };
-    })
-  };
+  return { products };
 }
 export {
   load,

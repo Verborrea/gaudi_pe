@@ -10,6 +10,16 @@
 	const zones = JSON.parse(data.zonas)
 	const formatter = new Intl.ListFormat('es', { style: 'long', type: 'conjunction' });
 
+	const days = {
+		L: 'Lunes',
+		M: 'Martes',
+		X: 'Miércoles',
+		J: 'Jueves',
+		V: 'Viernes',
+		S: 'Sábado',
+		D: 'Domingo'
+	}
+			
 	function obtenerPropiedadDeZona(punto) {
 		for (const zona of zones.features) {
 			const turfPoly = polygon(zona.geometry.coordinates)
@@ -81,14 +91,15 @@
 			let zone = obtenerPropiedadDeZona(map.getCenter().toArray())
 			$envio.isSet = true
 			$envio.price = zone?.precio || 0
-			$envio.dia = zone?.dias || []
+d
+			$envio.dia = zone?.dias?.map(d => days[d]) || []
 			$envio.coords = map.getCenter().toArray()
 		})
 
 		const initial_zone = obtenerPropiedadDeZona(map.getCenter().toArray())
 		$envio.isSet = true
 		$envio.price = initial_zone?.precio || 0
-		$envio.dia = initial_zone?.dias || []
+		$envio.dia = initial_zone?.dias?.map(d => days[d]) || []
 		$envio.coords = map.getCenter().toArray()
 	})
 </script>

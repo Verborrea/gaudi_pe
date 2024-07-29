@@ -7,52 +7,55 @@ const getInitialState = (key, plantilla) => {
   return plantilla;
 };
 function createCart() {
-  const { subscribe, set, update } = writable(getInitialState("cart-v3", {
+  const { subscribe, set, update } = writable(getInitialState("cart-v4", {
     items: [],
     quantity: 0,
     subtotal: 0,
-    nro_latas: 0,
-    showToast: false,
-    allowDiscount: false
+    special: {},
+    showToast: false
   }));
   if (typeof localStorage !== "undefined") {
     subscribe((state) => {
-      localStorage.setItem("cart-v3", JSON.stringify(state));
+      localStorage.setItem("cart-v4", JSON.stringify(state));
     });
   }
   return {
     subscribe,
     set,
-    addItem: (productId, price, discount, measure) => update((state) => {
-      const total = price * (1 - discount);
+    addItem: (product) => update((state) => {
+      const total = product.price * (1 - product.discount);
       const index = state.items.findIndex(
-        (item) => item.id === productId && item.t === total
+        (item) => item.id === product.id && item.t === total
       );
       if (index !== -1) {
         state.items[index].q += 1;
       } else {
         state.items.push({
-          id: productId,
+          id: product.id,
           t: total,
           q: 1,
-          m: measure,
+          m: product.measure,
           d: false
           // es un elemento con descuento por 6pack?
         });
       }
       state.subtotal += total;
       state.quantity += 1;
-      const six = 6;
-      const promoDiscount = 0.16;
-      if (state.allowDiscount && measure === "lata") {
-        state.nro_latas += 1;
-        if (state.nro_latas < six) {
+      const promoDiscountQuantity = product.special_discount_quantity;
+      const promoDiscount = product.special_discount;
+      if (product.special_discount > 0) {
+        if (product.measure in state.special) {
+          state.special[product.measure] += 1;
+        } else {
+          state.special[product.measure] = 1;
+        }
+        if (state.special[product.measure] < promoDiscountQuantity) {
           return state;
         }
-        state.nro_latas = 0;
-        let latas = state.items.filter((item) => item.m === "lata");
+        state.special[product.measure] = 0;
+        let latas = state.items.filter((item) => item.m === product.measure);
         let [sinPromo, conPromo] = latas.reduce((acc, item) => {
-          if (item.t === price * (1 - discount)) {
+          if (item.t === product.price * (1 - product.discount)) {
             acc[0].push(item);
           } else {
             acc[1].push(item);
@@ -68,27 +71,28 @@ function createCart() {
             const pos = state.items.findIndex((i) => i.id === lata.id && i.t === lata.t);
             state.items.splice(pos, 1, {
               id: lata.id,
-              t: price * (1 - promoDiscount),
+              t: product.price * (1 - promoDiscount),
               q: lata.q,
               m: "lata",
               d: true
             });
           }
         }
-        state.subtotal -= six * price * (promoDiscount - discount);
+        state.subtotal -= promoDiscountQuantity * product.price * (promoDiscount - product.discount);
         state.showToast = true;
       }
       return state;
     }),
-    removeItem: (productId, discount) => update((state) => {
-      const itemIndex = state.items.findIndex((item) => item.id === productId);
+    removeItem: (product) => update((state) => {
+      const itemIndex = state.items.findIndex((item) => item.id === product.id);
       if (itemIndex === -1) {
         return state;
       }
-      const promoDiscount = 0.16;
+      const promoDiscountQuantity = product.special_discount_quantity;
+      const promoDiscount = product.special_discount;
       state.quantity -= 1;
       const { id, t, q, m } = state.items[itemIndex];
-      if (state.allowDiscount === false || m !== "lata") {
+      if (product.special_discount === 0) {
         if (q > 1) {
           state.items[itemIndex].q -= 1;
         } else {
@@ -98,7 +102,7 @@ function createCart() {
         return state;
       }
       const freeSameIdIndex = state.items.findIndex(
-        (item) => item.id === productId && item.d === false
+        (item) => item.id === product.id && item.d === false
       );
       if (freeSameIdIndex !== -1) {
         const lata = state.items[freeSameIdIndex];
@@ -107,13 +111,13 @@ function createCart() {
         } else {
           state.items.splice(freeSameIdIndex, 1);
         }
-        state.nro_latas -= 1;
+        state.special[product.measure] -= 1;
         state.subtotal -= lata.t;
         return state;
       }
-      if (state.nro_latas > 0) {
+      if (state.special[product.measure] > 0) {
         const toRemoveIndex = state.items.findIndex(
-          (item) => item.id === productId && item.d === true
+          (item) => item.id === product.id && item.d === true
         );
         const toRemovePrice = state.items[toRemoveIndex].t;
         if (state.items[toRemoveIndex].q > 1) {
@@ -122,7 +126,7 @@ function createCart() {
           state.items.splice(toRemoveIndex, 1);
         }
         const freeIndex = state.items.findIndex(
-          (item) => item.d === false && item.m === "lata"
+          (item) => item.d === false && item.m === product.measure
         );
         const free = state.items[freeIndex];
         if (state.items[freeIndex].q > 1) {
@@ -140,12 +144,12 @@ function createCart() {
             id: free.id,
             t: toRemovePrice,
             q: 1,
-            m: "lata",
+            m: product.measure,
             d: true
             // esta sí tiene descuento
           });
         }
-        state.nro_latas -= 1;
+        state.special[product.measure] -= 1;
         state.subtotal -= free.t;
         return state;
       }
@@ -154,18 +158,18 @@ function createCart() {
       } else {
         state.items.splice(itemIndex, 1);
       }
-      let remainingQty = 5;
-      const priceWithoutDiscount = t / (1 - promoDiscount) * (1 - discount);
+      let remainingQty = promoDiscountQuantity - 1;
+      const priceWithoutDiscount = t / (1 - promoDiscount) * (1 - product.discount);
       for (let i = 0; i < state.items.length && remainingQty > 0; i++) {
         const item = state.items[i];
-        if (item.m === "lata" && item.d === true) {
+        if (item.m === product.measure && item.d === true) {
           const qtyToConvert = Math.min(remainingQty, item.q);
           if (item.q === qtyToConvert) {
             state.items.splice(i, 1, {
               id: item.id,
               t: priceWithoutDiscount,
               q: item.q,
-              m: "lata",
+              m: product.measure,
               d: false
             });
           } else {
@@ -174,25 +178,24 @@ function createCart() {
               id: item.id,
               t: priceWithoutDiscount,
               q: qtyToConvert,
-              m: "lata",
+              m: product.measure,
               d: false
             });
           }
           remainingQty -= qtyToConvert;
         }
       }
-      state.subtotal -= 6 * t;
-      state.subtotal += 5 * priceWithoutDiscount;
-      state.nro_latas = 5;
+      state.subtotal -= promoDiscountQuantity * t;
+      state.subtotal += (promoDiscountQuantity - 1) * priceWithoutDiscount;
+      state.special[product.measure] = promoDiscountQuantity - 1;
       return state;
     }),
-    clear: (allowDiscount) => update((state) => {
-      state.quantity = 0;
+    clear: () => update((state) => {
       state.items = [];
-      state.nro_latas = 0;
+      state.quantity = 0;
       state.subtotal = 0;
+      state.special = {};
       state.showToast = false;
-      state.allowDiscount = allowDiscount;
       return state;
     }),
     resetToast: () => update((state) => {
@@ -205,8 +208,8 @@ function createEnvio() {
   const { subscribe, set, update } = writable(getInitialState("envio", {
     isSet: false,
     price: 0,
-    coords: null,
-    dia: "Miércoles"
+    coords: [-71.536973, -16.398822],
+    dia: []
   }));
   if (typeof localStorage !== "undefined") {
     subscribe((state) => {

@@ -87,7 +87,7 @@ const template = `<!DOCTYPE html>
 			<td style="padding: 20px;" class="content">
 				<p><strong>Nombre:</strong> {{name}}</p>
 				<p><strong>Dirección:</strong> {{address}}</p>
-				<p><strong>Teléfono:</strong> {{phone}}</p>
+				<p><strong>Teléfono Celular:</strong> {{phone}}</p>
 				<p><strong>Email:</strong> {{email}}</p>
 				<p><strong>Notas:</strong> {{notes}}</p>
 				<p><strong>Coordenadas:</strong> Lng: {{lng}}, Lat: {{lat}}</p>
