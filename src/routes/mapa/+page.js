@@ -2,31 +2,31 @@ import { error } from '@sveltejs/kit';
 
 export const ssr = false;
 
-function convertToFeatureCollection(data) {
-	// Helper function to parse the "zonas" property string into an object
-	function parseZonas(zonas) {
-		try {
-			return JSON.parse(zonas);
-		} catch (e) {
-			console.error("Error parsing 'zonas':", e);
-			return null;
-		}
-	}
-  
-	// Map over the input data and transform each item
-	const features = data.map(item => {
-		const { id, name, dias, precio, estado, zonas } = item;
-		const geometry = parseZonas(zonas);
-		geometry.properties = { id, name, dias, precio, estado, zonas }
-		return geometry;
-	});
-  
-	// Create the final FeatureCollection object
-	return {
-		type: "FeatureCollection",
-		features
-	};
-}  
+function convertToFeatureCollection(dataArray) {
+    const featureCollection = {
+        type: "FeatureCollection",
+        features: []
+    };
+
+    dataArray.forEach(item => {
+        item.zonas.features.forEach(feature => {
+            const newFeature = {
+                type: "Feature",
+                geometry: feature.geometry,
+                properties: {
+                    id: item.id,
+                    name: item.name,
+                    dias: item.dias,
+                    precio: item.precio,
+                    estado: item.estado
+                }
+            };
+            featureCollection.features.push(newFeature);
+        });
+    });
+
+    return featureCollection;
+}
 
 export async function load({ fetch }) {
 	const res = await fetch("https://api.gaudi.pe/zonas");
